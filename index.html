@@ -1,97 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>Happy Birthday My Moon</title>
+<title>تولدت مبارک ماهلین عزیزم</title>
 
 <style>
 body {
   margin: 0;
+  overflow: hidden;
   font-family: sans-serif;
   background: linear-gradient(135deg, #ff758c, #ff7eb3);
   color: #fff;
-  overflow: hidden;
-}
-
-.container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
 }
 
-/* متن وسط */
-.main-text {
-  font-size: 3.5rem;
-  font-weight: bold;
-  line-height: 1.3;
-  animation: glow 2.8s ease-in-out infinite;
+.container {
+  padding: 60px 20px;
+  position: relative;
+  z-index: 2;
 }
 
-.main-text span {
-  font-size: 2.2rem;
-  display: block;
-  margin-top: 10px;
-  letter-spacing: 3px;
-}
+h1 { font-size: 2.5rem; }
+p { font-size: 1.2rem; line-height: 2; margin-top: 25px; }
 
-/* دکمه */
 button {
-  margin-top: 45px;
-  padding: 16px 42px;
-  font-size: 1.1rem;
-  border: none;
+  margin: 20px;
+  padding: 15px 35px;
   border-radius: 40px;
+  border: none;
+  font-size: 1rem;
   background: #fff;
   color: #ff4f7a;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-button:hover {
-  transform: scale(1.1);
-}
-
-/* متن بعد از شروع */
 #surprise {
   display: none;
-  margin-top: 35px;
-  font-size: 1.2rem;
-  line-height: 2;
+  margin-top: 30px;
+  font-size: 1.3rem;
 }
 
-/* افکت درخشش */
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 10px #fff;
-  }
-  50% {
-    text-shadow: 0 0 35px #ffd1dc, 0 0 60px #fff;
-  }
-  100% {
-    text-shadow: 0 0 10px #fff;
-  }
+#countdown {
+  margin-top: 25px;
+  font-size: 1.4rem;
+  font-weight: bold;
 }
 
-/* قلب‌ها */
+/* ❤️ افکت قلب */
 .heart {
   position: absolute;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.8);
   font-size: 20px;
-  animation: float 6s linear infinite;
+  animation: floatUp 6s linear infinite;
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(100vh) scale(0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-10vh) scale(1.3);
-    opacity: 0;
-  }
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
 }
 </style>
 </head>
@@ -99,80 +64,94 @@ button:hover {
 <body>
 
 <div class="container">
-  <div class="main-text">
-    Happy Birthday
-    <span>My Moon 🌙</span>
-  </div>
+  <h1>🎂 تولدت مبارک ماهلین عزیزم 🎂</h1>
+
+  <p>
+    ماهلین عزیزم،  
+    تولدت فقط یه تاریخ نیست،  
+    یه نقطه‌ی روشنه  
+    تو تقویم دل من ❤️
+  </p>
+
+  <div id="countdown">در حال محاسبه تایمر...</div>
 
   <button onclick="startSurprise()">شروع سوپرایز 🎉</button>
+  <button onclick="playVoice()">یه حرف از ته دل 💖</button>
 
   <div id="surprise">
     این صدا  
-    از دلیه که  
-    همیشه با توئه 💖
+    از دلیه که همیشه با توئه 💕
   </div>
 </div>
 
-<!-- موزیک بی‌کلام -->
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
-<!-- ویس تو -->
-<audio id="voiceMessage">
-  <source src="mahlin.m4a" type="audio/mp4">
-</audio>
-
-<!-- آهنگ باکلام -->
-<audio id="loveSong">
-  <source src="behet-ghol-midam.mp3" type="audio/mpeg">
-</audio>
+<audio id="music" src="music.mp3" loop></audio>
+<audio id="voice" src="mahlin.m4a"></audio>
 
 <script>
-function fadeVolume(audio, target, duration=800) {
-  const step = (target - audio.volume) / (duration / 50);
-  const interval = setInterval(() => {
-    audio.volume = Math.max(0, Math.min(1, audio.volume + step));
-    if ((step > 0 && audio.volume >= target) || (step < 0 && audio.volume <= target)) {
-      audio.volume = target;
-      clearInterval(interval);
-    }
-  }, 50);
+// 🎵 صدا
+function startSurprise() {
+  const music = document.getElementById("music");
+  const voice = document.getElementById("voice");
+  document.getElementById("surprise").style.display = "block";
+
+  music.volume = 0.3;
+  music.play();
+
+  setTimeout(() => {
+    music.volume = 0.15;
+    voice.play();
+  }, 2000);
+
+  voice.onended = () => music.volume = 0.35;
 }
 
-function createHeart() {
+function playVoice() {
+  document.getElementById("voice").play();
+}
+
+// ❤️ قلب‌ها
+setInterval(() => {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "❤️";
   heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (14 + Math.random() * 20) + "px";
+  heart.style.fontSize = (16 + Math.random()*20) + "px";
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 6000);
+}, 300);
+
+// ⏳ تایمر تولد (۱۰/۱۰/۱۳۸۶ شمسی → 31 December)
+function getNextBirthday() {
+  const now = new Date();
+  let year = now.getFullYear();
+  let birthday = new Date(year, 11, 31, 0, 0, 0); // December = 11
+
+  if (birthday < now) {
+    birthday = new Date(year + 1, 11, 31, 0, 0, 0);
+  }
+  return birthday.getTime();
 }
 
-function startSurprise() {
-  const music = document.getElementById("bgMusic");
-  const voice = document.getElementById("voiceMessage");
-  const loveSong = document.getElementById("loveSong");
+let birthdayTime = getNextBirthday();
 
-  document.getElementById("surprise").style.display = "block";
+setInterval(() => {
+  const now = new Date().getTime();
+  const diff = birthdayTime - now;
 
-  music.volume = 0.35;
-  music.play();
+  if (diff <= 0) {
+    document.getElementById("countdown").innerHTML =
+      "🎉 تولدت مبارک ماهلینِ من 🎉";
+    return;
+  }
 
-  setInterval(createHeart, 400);
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff / (1000*60*60)) % 24);
+  const m = Math.floor((diff / (1000*60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
 
-  setTimeout(() => {
-    fadeVolume(music, 0.1, 600);
-    voice.play();
-  }, 2000);
-
-  voice.onended = () => {
-    music.pause();
-    loveSong.volume = 0.9;
-    loveSong.play();
-  };
-}
+  document.getElementById("countdown").innerHTML =
+    `⏳ ${d} روز ${h} ساعت ${m} دقیقه ${s} ثانیه`;
+}, 1000);
 </script>
 
 </body>
